@@ -1,32 +1,59 @@
-# React + TypeScript + Vite
+# Lost Pets — поиск потерянных животных
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Веб-приложение для размещения объявлений о потерянных и найденных животных.
 
-Currently, two official plugins are available:
+## Назначение
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Пользователи публикуют объявления с местом и датой пропажи или находки, отслеживают
+статус поиска, печатают листовки для расклейки и делятся объявлениями.
 
-## React Compiler
+## Пользовательские сценарии
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Просмотр ленты объявлений с фильтрами.
+2. Просмотр карточки объявления.
+3. Создание и редактирование объявления.
+4. Печать листовки для расклейки.
+5. Шаринг объявления в соцсети.
+6. Личный кабинет со своими объявлениями.
 
-## Expanding the Oxlint configuration
+## Экраны
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+| URL | Экран |
+|-----|-------|
+| `/` | Лента объявлений |
+| `/ads/:id` | Карточка объявления |
+| `/ads/new` | Создание объявления |
+| `/ads/:id/print` | Листовка для печати |
+| `/profile` | Личный кабинет |
+| `/login` | Вход |
+| `/register` | Регистрация |
+| `*` | 404 |
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## Стек
+
+- React 18 + TypeScript
+- Vite
+- React Router v6
+- Material UI
+- React Hook Form + Zod
+
+## Структура
+
+```
+src/
+├── app/       # роутер, провайдеры, layout
+├── pages/     # страницы
+├── widgets/   # Header, Footer
+├── features/  # фильтры, шаринг, статус
+├── entities/  # Ad, AdCard, AdList
+└── shared/    # UI, утилиты, конфиг
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Запуск
+
+```bash
+npm install
+npm run dev
+```
+
+Приложение: http://localhost:5173/
