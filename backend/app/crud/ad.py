@@ -20,7 +20,7 @@ def update_ad(db: Session, ad_id: int, ad: schemas.AdUpdate):
     if not db_ad:
         return None
     
-    update_data = ad.model_dump(exclude_unset=True) # Только переданные поля
+    update_data = ad.model_dump(exclude_unset=True)
     for key, value in update_data.items():
         setattr(db_ad, key, value)
         

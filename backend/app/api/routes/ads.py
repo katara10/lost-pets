@@ -1,9 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional, Union
+import uuid
+import shutil
+import os
 from app.database import get_db
 from app.crud import ad as crud_ad
 from app.schemas import ad as schemas
+from app.models.ad import AdImage
 
 router = APIRouter(prefix="/ads", tags=["ads"])
 
@@ -12,8 +16,39 @@ def read_ads(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return crud_ad.get_ads(db, skip=skip, limit=limit)
 
 @router.post("/", response_model=schemas.AdResponse, status_code=status.HTTP_201_CREATED)
-def create_ad(ad: schemas.AdCreate, db: Session = Depends(get_db)):
-    return crud_ad.create_ad(db, ad)
+async def create_ad(
+    type: str = Form(...),
+    species: str = Form(...),
+    name: str = Form(...),
+    description: Optional[str] = Form(None),
+    location: str = Form(...),
+    date: str = Form(...),
+    contact_phone: str = Form(...),
+    contact_name: Optional[str] = Form(None),
+    photo: Union[UploadFile, None] = File(None), 
+    db: Session = Depends(get_db)
+):
+    ad_data = schemas.AdCreate(
+        type=type, species=species, name=name, description=description,
+        location=location, date=date, contact_phone=contact_phone, contact_name=contact_name
+    )
+    db_ad = crud_ad.create_ad(db, ad_data)
+
+    if photo:
+        if photo.content_type in ["image/jpeg", "image/png", "image/webp"]:
+            file_extension = photo.filename.split(".")[-1]
+            unique_filename = f"{uuid.uuid4()}.{file_extension}"
+            file_path = f"static/images/{unique_filename}"
+            
+            with open(file_path, "wb") as buffer:
+                shutil.copyfileobj(photo.file, buffer)
+                
+            db_image = AdImage(ad_id=db_ad.id, image_url=f"/static/images/{unique_filename}")
+            db.add(db_image)
+    
+    db.commit()
+    db.refresh(db_ad)
+    return db_ad
 
 @router.get("/{ad_id}", response_model=schemas.AdResponse)
 def read_ad(ad_id: int, db: Session = Depends(get_db)):
