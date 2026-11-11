@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Typography } from '@mui/material';
 import { AdList } from '../../entities/ad/AdList';
 import { Loader } from '../../shared/ui/Loader/Loader';
 import { EmptyState } from '../../shared/ui/EmptyState/EmptyState';
-import type { Ad } from '../../entities/ad/types';
+import { AdFilters } from '../../features/ad-filters/AdFilters';
+import type { Ad, AdFilters as AdFiltersType } from '../../entities/ad/types';
 
 const localMockAds: Ad[] = [
   {
@@ -48,25 +49,44 @@ export const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [ads, setAds] = useState<Ad[]>([]);
 
+  const [filters, setFilters] = useState<AdFiltersType>({ 
+    type: 'all', 
+    species: 'all' 
+  });
+
   useEffect(() => {
-    // Имитация загрузки данных
     const timer = setTimeout(() => {
       setAds(localMockAds);
       setIsLoading(false);
     }, 1000);
-
     return () => clearTimeout(timer);
   }, []);
 
+  const filteredAds = useMemo(() => {
+    return ads.filter((ad) => {
+      if (filters.type !== 'all' && ad.type !== filters.type) return false;
+      if (filters.species !== 'all' && ad.species !== filters.species) return false;
+      return true;
+    });
+  }, [ads, filters]);
+
   if (isLoading) return <Loader />;
-  if (ads.length === 0) return <EmptyState message="Объявлений пока нет" />;
 
   return (
     <div>
       <Typography variant="h4" component="h1" gutterBottom>
         Потерянные и найденные животные
       </Typography>
-      <AdList ads={ads} />
+
+      {/* Вставляем компонент фильтров */}
+      <AdFilters filters={filters} onChange={setFilters} />
+
+      {/* Если после фильтрации ничего не осталось — показываем заглушку */}
+      {filteredAds.length === 0 ? (
+        <EmptyState message="По вашему запросу ничего не найдено. Попробуйте изменить фильтры." />
+      ) : (
+        <AdList ads={filteredAds} />
+      )}
     </div>
   );
 };
