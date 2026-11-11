@@ -1,0 +1,40 @@
+import type { Ad } from '../../entities/ad/types';
+
+export const mockAds: Ad[] = [
+  {
+    id: '1',
+    type: 'lost',
+    species: 'Кошка',
+    name: 'Мурка',
+    description: 'Пушистая, серая, зеленые глаза. Очень ласковая, но пугливая. Была в красном ошейнике.',
+    location: 'Москва, район Хамовники',
+    date: '2026-10-01',
+    status: 'active',
+    photos: ['https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=400&auto=format&fit=crop'],
+    contacts: { phone: '+7 (999) 123-45-67', name: 'Анна' },
+  },
+  {
+    id: '2',
+    type: 'found',
+    species: 'Собака',
+    name: 'Неизвестный пёс',
+    description: 'Найден рыжий спаниель возле метро. Ухоженный, знает команду "сидеть". Ищем хозяев!',
+    location: 'Санкт-Петербург, ст. м. Площадь Восстания',
+    date: '2026-10-03',
+    status: 'active',
+    photos: ['https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=400&auto=format&fit=crop'],
+    contacts: { phone: '+7 (911) 222-33-44', name: 'Игорь' },
+  },
+  {
+    id: '3',
+    type: 'lost',
+    species: 'Попугай',
+    name: 'Кеша',
+    description: 'Зеленый волнистый попугай. Умеет говорить "Кеша хороший". Вылетел в открытое окно.',
+    location: 'Екатеринбург, Академический район',
+    date: '2026-10-05',
+    status: 'found',
+    photos: ['https://images.unsplash.com/photo-1552728089-57bdde30beb3?q=80&w=400&auto=format&fit=crop'],
+    contacts: { phone: '+7 (900) 555-66-77', name: 'Елена' },
+  },
+];
