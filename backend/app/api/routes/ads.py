@@ -8,12 +8,21 @@ from app.database import get_db
 from app.crud import ad as crud_ad
 from app.schemas import ad as schemas
 from app.models.ad import AdImage
+from app.models.user import User
+from app.api.deps import get_current_user
 
 router = APIRouter(prefix="/ads", tags=["ads"])
 
 @router.get("/", response_model=List[schemas.AdResponse])
 def read_ads(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return crud_ad.get_ads(db, skip=skip, limit=limit)
+
+@router.get("/{ad_id}", response_model=schemas.AdResponse)
+def read_ad(ad_id: int, db: Session = Depends(get_db)):
+    db_ad = crud_ad.get_ad(db, ad_id)
+    if db_ad is None:
+        raise HTTPException(status_code=404, detail="Объявление не найдено")
+    return db_ad
 
 @router.post("/", response_model=schemas.AdResponse, status_code=status.HTTP_201_CREATED)
 async def create_ad(
@@ -26,7 +35,8 @@ async def create_ad(
     contact_phone: str = Form(...),
     contact_name: Optional[str] = Form(None),
     photo: Union[UploadFile, None] = File(None), 
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     ad_data = schemas.AdCreate(
         type=type, species=species, name=name, description=description,
@@ -50,22 +60,24 @@ async def create_ad(
     db.refresh(db_ad)
     return db_ad
 
-@router.get("/{ad_id}", response_model=schemas.AdResponse)
-def read_ad(ad_id: int, db: Session = Depends(get_db)):
-    db_ad = crud_ad.get_ad(db, ad_id)
-    if db_ad is None:
-        raise HTTPException(status_code=404, detail="Объявление не найдено")
-    return db_ad
-
 @router.patch("/{ad_id}", response_model=schemas.AdResponse)
-def update_ad(ad_id: int, ad: schemas.AdUpdate, db: Session = Depends(get_db)):
+def update_ad(
+    ad_id: int, 
+    ad: schemas.AdUpdate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     db_ad = crud_ad.update_ad(db, ad_id, ad)
     if db_ad is None:
         raise HTTPException(status_code=404, detail="Объявление не найдено")
     return db_ad
 
 @router.delete("/{ad_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_ad(ad_id: int, db: Session = Depends(get_db)):
+def delete_ad(
+    ad_id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     db_ad = crud_ad.delete_ad(db, ad_id)
     if db_ad is None:
         raise HTTPException(status_code=404, detail="Объявление не найдено")
