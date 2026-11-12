@@ -11,4 +11,6 @@ export const adFormSchema = z.object({
   contact_name: z.string().optional(),
 });
 
-export type AdFormData = z.infer<typeof adFormSchema>;
+export type AdFormData = z.infer<typeof adFormSchema> & {
+  photo?: File | null;
+};

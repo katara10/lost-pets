@@ -15,7 +15,7 @@ import { adFormSchema, type AdFormData } from '../model/schema';
 import { SPECIES_OPTIONS } from '../../../shared/config/constants';
 
 interface AdFormProps {
-  onSubmit: (data: AdFormData) => void;
+  onSubmit: (data: FormData) => void;
   isSubmitting?: boolean;
 }
 
@@ -34,11 +34,31 @@ export const AdForm = ({ onSubmit, isSubmitting = false }: AdFormProps) => {
     }
   });
 
+  const handleFormSubmit = (data: AdFormData) => {
+    const formData = new FormData();
+    formData.append('type', data.type);
+    formData.append('species', data.species);
+    formData.append('name', data.name);
+    formData.append('description', data.description);
+    formData.append('location', data.location);
+    formData.append('date', new Date(data.date).toISOString()); 
+    formData.append('contact_phone', data.contact_phone);
+    
+    if (data.contact_name) {
+      formData.append('contact_name', data.contact_name);
+    }
+    
+    if (data.photo) {
+      formData.append('photo', data.photo);
+    }
+
+    onSubmit(formData);
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(handleFormSubmit)}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         
-        {/* 1. Тип объявления */}
         <Controller
           name="type"
           control={control}
@@ -54,7 +74,6 @@ export const AdForm = ({ onSubmit, isSubmitting = false }: AdFormProps) => {
           )}
         />
 
-        {/* 2. Вид животного */}
         <Controller
           name="species"
           control={control}
@@ -75,7 +94,6 @@ export const AdForm = ({ onSubmit, isSubmitting = false }: AdFormProps) => {
           )}
         />
 
-        {/* 3. Кличка */}
         <Controller
           name="name"
           control={control}
@@ -89,7 +107,6 @@ export const AdForm = ({ onSubmit, isSubmitting = false }: AdFormProps) => {
           )}
         />
 
-        {/* 4. Описание */}
         <Controller
           name="description"
           control={control}
@@ -105,7 +122,6 @@ export const AdForm = ({ onSubmit, isSubmitting = false }: AdFormProps) => {
           )}
         />
 
-        {/* 5. Место */}
         <Controller
           name="location"
           control={control}
@@ -119,7 +135,6 @@ export const AdForm = ({ onSubmit, isSubmitting = false }: AdFormProps) => {
           )}
         />
 
-        {/* 6. Дата */}
         <Controller
           name="date"
           control={control}
@@ -135,7 +150,6 @@ export const AdForm = ({ onSubmit, isSubmitting = false }: AdFormProps) => {
           )}
         />
 
-        {/* 7. Телефон */}
         <Controller
           name="contact_phone"
           control={control}
@@ -150,7 +164,6 @@ export const AdForm = ({ onSubmit, isSubmitting = false }: AdFormProps) => {
           )}
         />
 
-        {/* 8. Имя контакта */}
         <Controller
           name="contact_name"
           control={control}
@@ -161,6 +174,25 @@ export const AdForm = ({ onSubmit, isSubmitting = false }: AdFormProps) => {
               error={!!errors.contact_name} 
               helperText={errors.contact_name?.message} 
             />
+          )}
+        />
+
+        <Controller
+          name="photo"
+          control={control}
+          render={({ field: { onChange, value, ...field } }) => (
+            <Button variant="outlined" component="label" color="primary">
+              Прикрепить фотографию
+              <input
+                type="file"
+                hidden
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files ? e.target.files[0] : null;
+                  onChange(file);
+                }}
+              />
+            </Button>
           )}
         />
 
