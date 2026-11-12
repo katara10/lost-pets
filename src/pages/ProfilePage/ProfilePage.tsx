@@ -14,7 +14,7 @@ const myMockAds: Ad[] = [
     location: 'Москва, район Хамовники',
     date: '2026-10-01',
     status: 'active',
-    photos: ['https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=400&auto=format&fit=crop'],
+    photos: ['/cat.jpg'],
     contacts: { phone: '+7 (999) 123-45-67', name: 'Анна' },
   },
   {
@@ -26,7 +26,7 @@ const myMockAds: Ad[] = [
     location: 'Екатеринбург, Академический район',
     date: '2026-10-05',
     status: 'active',
-    photos: ['https://images.unsplash.com/photo-1552728089-57bdde30beb3?q=80&w=400&auto=format&fit=crop'],
+    photos: ['/parrot.jpg'],
     contacts: { phone: '+7 (900) 555-66-77', name: 'Елена' },
   },
 ];
@@ -80,7 +80,6 @@ export const ProfilePage = () => {
                 </div>
               </div>
 
-              {/* Кнопка смены статуса (показываем только если статус "active") */}
               {ad.status === 'active' && (
                 <Button 
                   variant="contained" 
