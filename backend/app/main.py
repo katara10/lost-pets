@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.database import engine, Base
-from app.models import ad
+from app.models import user, token, ad
 from app.api.api import api_router
 from fastapi.staticfiles import StaticFiles
 import os
