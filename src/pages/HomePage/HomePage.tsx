@@ -40,7 +40,7 @@ const localMockAds: Ad[] = [
     location: 'Екатеринбург, Академический район',
     date: '2026-10-05',
     status: 'found',
-    photos: ['https://images.unsplash.com/photo-1552728089-57bdde30beb3?q=80&w=400&auto=format&fit=crop'],
+    photos: ['https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=400&auto=format&fit=crop'],
     contacts: { phone: '+7 (900) 555-66-77', name: 'Елена' },
   },
 ];
@@ -78,10 +78,8 @@ export const HomePage = () => {
         Потерянные и найденные животные
       </Typography>
 
-      {/* Вставляем компонент фильтров */}
       <AdFilters filters={filters} onChange={setFilters} />
 
-      {/* Если после фильтрации ничего не осталось — показываем заглушку */}
       {filteredAds.length === 0 ? (
         <EmptyState message="По вашему запросу ничего не найдено. Попробуйте изменить фильтры." />
       ) : (

@@ -12,13 +12,12 @@ export const AdCard = ({ ad }: { ad: Ad }) => {
       transition={{ duration: 0.3 }}
       style={{ height: '100%' }}
     >
-      {/* 2. Ссылка остается внутри motion.div */}
       <Link to={`/ads/${ad.id}`} style={{ textDecoration: 'none' }}>
         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
           <CardMedia
             component="img"
-            height="200"
-            image={ad.photos?.[0] || 'https://via.placeholder.com/400x200?text=No+Photo'}
+            sx={{ height: 200, objectFit: 'cover' }}
+            image={ad.photos?.[0] || 'https://via.placeholder.com/400x200?text=Нет+фото'}
             alt={ad.name}
           />
           <CardContent sx={{ flexGrow: 1 }}>
