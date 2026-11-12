@@ -8,7 +8,7 @@ import { ProfilePage } from '../pages/ProfilePage/ProfilePage';
 import { LoginPage } from '../pages/LoginPage/LoginPage';
 import { RegisterPage } from '../pages/RegisterPage/RegisterPage';
 import { NotFoundPage } from '../pages/NotFoundPage/NotFoundPage';
-
+import { ProtectedRoute } from './router/ProtectedRoute'; 
 
 export const router = createBrowserRouter([
   {
@@ -17,10 +17,22 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: 'ads/:id', element: <AdDetailPage /> },
-      { path: 'ads/new', element: <AdFormPage /> },
-      { path: 'ads/:id/edit', element: <AdFormPage /> },
+      
+      { 
+        path: 'ads/new', 
+        element: <ProtectedRoute><AdFormPage /></ProtectedRoute> 
+      },
+      { 
+        path: 'ads/:id/edit', 
+        element: <ProtectedRoute><AdFormPage /></ProtectedRoute> 
+      },
+      
       { path: 'ads/:id/print', element: <PrintFlyerPage /> },
-      { path: 'profile', element: <ProfilePage /> },
+      
+      { 
+        path: 'profile', 
+        element: <ProtectedRoute><ProfilePage /></ProtectedRoute> 
+      },
     ],
   },
   { path: '/login', element: <LoginPage /> },
